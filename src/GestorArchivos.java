@@ -13,6 +13,7 @@ public class GestorArchivos {
             throw new IOException("La carpeta no existe o no es un directorio.");
         }
     }
+    
 
     public List<String> listarArchivos() throws IOException {
         if (carpetaSeleccionada == null) {
