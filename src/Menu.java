@@ -36,10 +36,10 @@ public class Menu {
                         listarArchivos();
                         break;
                     case 3:
-                        
+                        leerArchivo();
                         break;
                     case 4:
-                        
+                        convertirArchivo();
                         break;
                     case 5:
                         System.out.println("Saliendo...");
@@ -66,4 +66,44 @@ public class Menu {
         System.out.println("Archivos disponibles: " + archivos);
     }
 
+    private void leerArchivo() throws Exception {
+        System.out.print("Ingrese el nombre del archivo: ");
+        archivoSeleccionado = scanner.nextLine();
+        String rutaArchivo = gestorArchivos.getCarpetaSeleccionada() + File.separator + archivoSeleccionado;
+        if (archivoSeleccionado.endsWith(".csv")) {
+            registros = Conversor.leerCSV(rutaArchivo);
+        } else if (archivoSeleccionado.endsWith(".json")) {
+            registros = Conversor.leerJSON(rutaArchivo);
+        } else if (archivoSeleccionado.endsWith(".xml")) {
+            registros = Conversor.leerXML(rutaArchivo);
+        } else {
+            System.out.println("Formato no reconocido.");
+            return;
+        }
+        System.out.println("Archivo cargado con éxito. Registros: " + registros.size());
+    }
+
+    private void convertirArchivo() throws Exception {
+        if (registros.isEmpty()) {
+            System.out.println("No hay registros cargados para convertir.");
+            return;
+        }
+        System.out.print("Seleccione el formato de salida (csv/json/xml): ");
+        String formato = scanner.nextLine();
+        System.out.print("Ingrese el nombre del archivo de salida: ");
+        String nombreSalida = scanner.nextLine();
+        String rutaSalida = gestorArchivos.getCarpetaSeleccionada() + File.separator + nombreSalida + "." + formato;
+
+        if ("csv".equalsIgnoreCase(formato)) {
+            Conversor.escribirCSV(rutaSalida, registros);
+        } else if ("json".equalsIgnoreCase(formato)) {
+            Conversor.escribirJSON(rutaSalida, registros);
+        } else if ("xml".equalsIgnoreCase(formato)) {
+            Conversor.escribirXML(rutaSalida, registros);
+        } else {
+            System.out.println("Formato no válido.");
+            return;
+        }
+        System.out.println("Archivo convertido con éxito.");
+    }
 }
